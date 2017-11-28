@@ -1,3 +1,3 @@
 # oystercard
 
-This repo is for creating an oystercard system using **TDD** and **Object-Oriented Design** in Ruby.
+This repo is for an oystercard system made using **TDD** and **Object-Oriented Design** in Ruby, for the Week 2 challenge in Makers Academy.
