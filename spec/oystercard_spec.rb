@@ -42,32 +42,33 @@ context 'transit' do
     end
   end
   describe '#touch_out' do
-    it 'touch out success' do
-      card.top_up(5)
+    before do
+      card.top_up(20)
       card.touch_in(station)
       card.touch_out(station)
-      expect( card ).to_not be_in_journey
     end
+
     it 'deduct fare success' do
       expect { card.touch_out(station) }.to change{ card.balance }.by(-Oystercard::FARE)
     end
+
+    it 'touch out success' do
+      expect( card ).to_not be_in_journey
+    end
+
     it 'clears station data upon touch-out' do
-      card.top_up(5)
-      card.touch_in(station)
-      card.touch_out(station)
       expect( card.entry_station ).to eq nil
     end
-    it 'remember entry_station upon touch-out' do
-      card.top_up(20)
-      card.touch_in(station)
-      card.touch_out(station)
+    it 'remember exit_station upon touch-out' do
       expect( card.exit_station ).to eq station.name
     end
-    it 'checks if stations are recorded' do
-      card.top_up(20)
-      card.touch_in(station)
-      expect{ card.touch_out(station) }.to change{ card.journeys.size }.by 1
-    end
+
+  end
+
+  it 'checks if stations are recorded' do
+    card.top_up(20)
+    card.touch_in(station)
+    expect { card.touch_out(station) }.to change { card.journeys.size }.by 1
   end
 
 end
