@@ -22,4 +22,12 @@ describe Oystercard do
     end
   end
 
+  describe 'deducts fare' do
+    it 'deducts success' do
+      #checks if the proper fare has been deducted from balance
+      expect{ subject.deduct 1 }.to change{subject.balance }.by -1
+    end
+    #it { is_expected.to respond_to(:deduct).with(1).argument }
+  end
+
 end

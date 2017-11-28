@@ -9,4 +9,7 @@ class Oystercard
     fail 'Maximum balance of #{maximum_balance} exceeded' if deposit + @balance > MAXIMUM_BALANCE
     @balance += deposit
   end
+  def deduct(fare)
+    @balance -= fare #fare is deducted from balance
+  end
 end
