@@ -6,9 +6,6 @@ describe Oystercard do
     expect(subject.balance).to eq 0
   end
 
-  describe '#top_up' do
-    it { is_expected.to respond_to(:top_up).with(1).argument }
-
     it 'top up success' do
       expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
     end
@@ -19,11 +16,6 @@ describe Oystercard do
     end
   end
 
-  describe 'deducts fare' do
-    it 'deduct success' do
-      expect{ subject.deduct 1 }.to change{subject.balance }.by -1
-    end
-  end
 context 'transit' do
   describe '#in_journey' do
     it 'where am i' do
@@ -36,7 +28,7 @@ context 'transit' do
       subject.touch_in
       expect( subject.in_journey ).to eq true
     end
-    it 'touch in fail if lack of balance' do
+    it 'touch out fail if lack of balance' do
       expect { subject.touch_in }.to raise_error 'Insufficient funds'
     end
   end
@@ -47,9 +39,10 @@ context 'transit' do
       subject.touch_out
       expect( subject.in_journey ).to eq false
     end
+    it 'deduct fare success' do
+      expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::FARE)
+    end
   end
 
-end
-
-
+ end
 end
