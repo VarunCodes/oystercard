@@ -16,7 +16,9 @@ describe Oystercard do
       card.top_up(Oystercard::MAXIMUM_BALANCE)
       expect{ card.top_up(0.01) }.to raise_error "Maximum balance of #{Oystercard::MAXIMUM_BALANCE} exceeded"
     end
-
+    it 'list of journeys empty by default' do
+      expect( card.journeys.size ).to be_zero
+    end
 
 context 'transit' do
   describe '#in_journey' do
@@ -43,18 +45,30 @@ context 'transit' do
     it 'touch out success' do
       card.top_up(5)
       card.touch_in(station)
-      card.touch_out
+      card.touch_out(station)
       expect( card ).to_not be_in_journey
     end
     it 'deduct fare success' do
-      expect { card.touch_out }.to change{ card.balance }.by(-Oystercard::FARE)
+      expect { card.touch_out(station) }.to change{ card.balance }.by(-Oystercard::FARE)
     end
     it 'clears station data upon touch-out' do
       card.top_up(5)
       card.touch_in(station)
-      card.touch_out
+      card.touch_out(station)
       expect( card.entry_station ).to eq nil
     end
+    it 'remember entry_station upon touch-out' do
+      card.top_up(20)
+      card.touch_in(station)
+      card.touch_out(station)
+      expect( card.exit_station ).to eq station.name
+    end
+    it 'checks if stations are recorded' do
+      card.top_up(20)
+      card.touch_in(station)
+      expect{ card.touch_out(station) }.to change{ card.journeys.size }.by 1
+    end
   end
+
 end
 end
