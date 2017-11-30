@@ -11,12 +11,12 @@ class JourneyLog
   def start(entry)
     fare = (!!current_journey.entry_station ? PENALTY_FARE : 0)
     @current_journey = @journey_class.new(entry)
+    add_journey
     fare
   end
 
   def finish(exit_station)
     current_journey.finish(exit_station)
-    add_journey
     current_journey.fare
   end
 
