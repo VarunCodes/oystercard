@@ -40,6 +40,11 @@ describe Oystercard do
       it 'touch out fail if lack of balance' do
         expect { card.touch_in(station) }.to raise_error 'Insufficient funds'
       end
+      it "charges a penalty fare if the last journey wasn't touched out" do
+        card.top_up(Journey::MINIMUM_FARE)
+        card.touch_in(station)
+        expect{ card.touch_in(station) }.to change{ card.balance }.by(-Journey::PENALTY_FARE)
+      end
     end
 
     describe '#touch_out' do
@@ -53,7 +58,7 @@ describe Oystercard do
       it 'touch out success' do
         expect( card ).to_not be_in_journey
       end
-      it 'pentalty fare if no entry station' do
+      it 'penalty fare if no entry station' do
         expect{ card.touch_out(station) }.to change{ card.balance }.by(-Journey::PENALTY_FARE)
       end
     end

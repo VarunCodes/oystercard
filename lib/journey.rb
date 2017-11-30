@@ -16,11 +16,7 @@ class Journey
   end
 
   def fare
-    if !entry_station || !exit_station
-      PENALTY_FARE
-    else
-      MINIMUM_FARE
-    end
+    !entry_station || !exit_station ? PENALTY_FARE : MINIMUM_FARE
   end
 
   def complete?
