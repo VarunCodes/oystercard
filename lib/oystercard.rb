@@ -7,34 +7,30 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @journey_log = []
+    @journey_log = JourneyLog.new
   end
+
   def top_up(deposit)
     fail "Maximum balance of #{MAXIMUM_BALANCE} exceeded" if deposit + @balance > MAXIMUM_BALANCE
     @balance += deposit
   end
+
   def touch_in(station)
     fail 'Insufficient funds' if DEFAULT_MINIMUM > balance
-    deduct(current_journey.fare) if in_journey?
-    @current_journey = Journey.new(station)
+    deduct(@journey_log.start(station))
   end
+
   def touch_out(station)
-    @current_journey ||= Journey.new(nil)
-    current_journey.finish(station)
-    deduct current_journey.fare
-    @journey_log << current_journey
+    deduct(@journey_log.finish(station))
   end
+
   def in_journey?
-    !!(current_journey && !current_journey.complete?)
+    @journey_log.in_journey?
   end
 
   private
   def deduct(fare)
     @balance -= fare
-  end
-
-  def current_journey
-    @current_journey
   end
 
 end
